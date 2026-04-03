@@ -27,7 +27,7 @@ npm install
 
 1. Ve a https://github.com/new
 2. Crea un repositorio llamado `mr-ellis`
-3. Sigue las instrucciones que te da GitHub para subir los archivos
+3. Sigue ahora las instrucciones que te da GitHub para subir los archivos
 
 ---
 
