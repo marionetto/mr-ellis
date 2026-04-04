@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mr. Ellis — English Teacher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      color: #e8eaf0;
+    }
+
+    /* LANDING */
+    #landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .hero-icon { font-size: 3.5rem; margin-bottom: 16px; }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(2.2rem, 6vw, 3.2rem);
+      background: linear-gradient(90deg, #a8edea, #fed6e3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #a0a8c0;
+      font-style: italic;
+      margin-bottom: 40px;
+      font-size: 1rem;
+    }
+
+    .topics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      max-width: 520px;
+      width: 100%;
+      margin-bottom: 32px;
+    }
+
+    .topic-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 16px 8px;
+      color: #dde;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .topic-btn:hover {
+      background: rgba(168,237,234,0.12);
+      border-color: rgba(168,237,234,0.4);
+      transform: translateY(-2px);
+    }
+
+    .topic-icon { font-size: 1.6rem; display: block; margin-bottom: 6px; }
+
+    .start-btn {
+      background: linear-gradient(90deg, #a8edea, #fed6e3);
+      border: none;
+      border-radius: 50px;
+      padding: 15px 44px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      color: #1a1a2e;
+      box-shadow: 0 8px 24px rgba(168,237,234,0.25);
+      transition: all 0.2s;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(168,237,234,0.4);
+    }
+
+    /* CHAT */
+    #chat {
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(10px);
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+
+    .avatar-sm {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+      margin-right: 8px; margin-top: 4px;
+    }
+
+    .header-name { font-weight: 600; font-size: 1rem; }
+    .header-sub { font-size: 0.75rem; color: #a8edea; }
+
+    .back-btn {
+      margin-left: auto;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      color: #aab;
+      cursor: pointer;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg-row {
+      display: flex;
+    }
+
+    .msg-row.user { justify-content: flex-end; }
+    .msg-row.assistant { justify-content: flex-start; align-items: flex-start; }
+
+    .bubble {
+      max-width: 78%;
+      padding: 12px 16px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      border-radius: 18px;
+    }
+
+    .bubble.user {
+      background: rgba(168,237,234,0.1);
+      border: 1px solid rgba(168,237,234,0.3);
+      border-radius: 18px 18px 4px 18px;
+    }
+
+    .bubble.assistant {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px 18px 18px 18px;
+    }
+
+    .correction {
+      background: rgba(255,220,100,0.15);
+      border-left: 3px solid #f5c842;
+      padding: 6px 10px;
+      border-radius: 0 6px 6px 0;
+      margin: 4px 0;
+      font-size: 0.85em;
+      font-family: monospace;
+    }
+
+    .typing {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px 18px 18px 18px;
+      padding: 14px 18px;
+    }
+
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #a8edea;
+      opacity: 0.7;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+
+    .input-area {
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    textarea {
+      flex: 1;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #e8eaf0;
+      font-size: 0.93rem;
+      resize: none;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.5;
+    }
+
+    textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+    .send-btn {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      transition: all 0.2s;
+      align-self: flex-end;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .send-btn.active {
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    @media (max-width: 400px) {
+      .topics { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing">
+  <div class="hero-icon">🎓</div>
+  <h1>Mr. Ellis</h1>
+  <p class="subtitle">Tu profesor de inglés personal · Your personal English tutor</p>
+
+  <div class="topics">
+    <button class="topic-btn" onclick="startLesson('I want to practice everyday conversation in English.')">
+      <span class="topic-icon">💬</span>Conversación
+    </button>
+    <button class="topic-btn" onclick="startLesson('Can you help me with English grammar?')">
+      <span class="topic-icon">📝</span>Gramática
+    </button>
+    <button class="topic-btn" onclick="startLesson('I want to learn new vocabulary words.')">
+      <span class="topic-icon">📚</span>Vocabulario
+    </button>
+    <button class="topic-btn" onclick="startLesson('I need help with English pronunciation.')">
+      <span class="topic-icon">🗣️</span>Pronunciación
+    </button>
+    <button class="topic-btn" onclick="startLesson('I want to improve my English writing.')">
+      <span class="topic-icon">✍️</span>Escritura
+    </button>
+    <button class="topic-btn" onclick="startLesson('Can you teach me phrasal verbs?')">
+      <span class="topic-icon">🎯</span>Phrasal Verbs
+    </button>
+  </div>
+
+  <button class="start-btn" onclick="startLesson('Hello! I want to start learning English.')">
+    ¡Empezar clase! · Start class!
+  </button>
+</div>
+
+<!-- CHAT -->
+<div id="chat">
+  <div class="chat-header">
+    <div class="avatar">🎓</div>
+    <div>
+      <div class="header-name">Mr. Ellis</div>
+      <div class="header-sub">English Teacher · Profesor de Inglés</div>
+    </div>
+    <button class="back-btn" onclick="goBack()">← Menú</button>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="input-area">
+    <textarea id="input" rows="1" placeholder="Type in English or Spanish... / Escribe en inglés o español..."
+      onkeydown="handleKey(event)" oninput="updateBtn()"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+  let messages = [];
+  let loading = false;
+
+  function goBack() {
+    document.getElementById('landing').style.display = 'flex';
+    document.getElementById('chat').style.display = 'none';
+    messages = [];
+    document.getElementById('messages').innerHTML = '';
+  }
+
+  async function startLesson(prompt) {
+    document.getElementById('landing').style.display = 'none';
+    document.getElementById('chat').style.display = 'flex';
+    await sendToAPI(prompt);
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  function updateBtn() {
+    const val = document.getElementById('input').value.trim();
+    const btn = document.getElementById('sendBtn');
+    btn.classList.toggle('active', val.length > 0);
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('input');
+    const text = input.value.trim();
+    if (!text || loading) return;
+    input.value = '';
+    updateBtn();
+    await sendToAPI(text);
+  }
+
+  async function sendToAPI(text) {
+    messages.push({ role: 'user', content: text });
+    renderMessages();
+    showTyping();
+    loading = true;
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages }),
+      });
+      const data = await res.json();
+      const reply = data.text || 'Sorry, try again.';
+      messages.push({ role: 'assistant', content: reply });
+    } catch {
+      messages.push({ role: 'assistant', content: '⚠️ Connection error. Please try again.' });
+    }
+
+    loading = false;
+    hideTyping();
+    renderMessages();
+    setTimeout(() => document.getElementById('input').focus(), 100);
+  }
+
+  function renderMessages() {
+    const container = document.getElementById('messages');
+    container.innerHTML = '';
+    messages.forEach(msg => {
+      const row = document.createElement('div');
+      row.className = `msg-row ${msg.role}`;
+
+      if (msg.role === 'assistant') {
+        const av = document.createElement('div');
+        av.className = 'avatar-sm';
+        av.textContent = '🎓';
+        row.appendChild(av);
+      }
+
+      const bubble = document.createElement('div');
+      bubble.className = `bubble ${msg.role}`;
+
+      if (msg.role === 'assistant') {
+        bubble.innerHTML = formatMessage(msg.content);
+      } else {
+        bubble.textContent = msg.content;
+      }
+
+      row.appendChild(bubble);
+      container.appendChild(row);
+    });
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function formatMessage(text) {
+    return text.split('\n').map(line => {
+      if (line.startsWith('✏️')) {
+        return `<div class="correction">${line}</div>`;
+      }
+      return `<p style="margin:2px 0">${line}</p>`;
+    }).join('');
+  }
+
+  let typingEl = null;
+  function showTyping() {
+    const container = document.getElementById('messages');
+    typingEl = document.createElement('div');
+    typingEl.className = 'typing';
+    typingEl.innerHTML = `
+      <div class="avatar-sm">🎓</div>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>`;
+    container.appendChild(typingEl);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function hideTyping() {
+    if (typingEl) { typingEl.remove(); typingEl = null; }
+  }
+</script>
+</body>
+</html>
